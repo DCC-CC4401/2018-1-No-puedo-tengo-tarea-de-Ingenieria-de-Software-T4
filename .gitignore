@@ -56,5 +56,7 @@ __pycache__/
 .idea/
 venv/
 **/__pycache__/
+**/migrations/
 **/db.sqlite3
 db.sqlite3
+commsg
