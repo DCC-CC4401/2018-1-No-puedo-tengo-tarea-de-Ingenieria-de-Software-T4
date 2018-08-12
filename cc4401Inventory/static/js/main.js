@@ -18,6 +18,7 @@ jQuery(document).ready(function($){
 		this.eventsWrapper = this.element.find('.events');
 		this.eventsGroup = this.eventsWrapper.find('.events-group');
 		this.singleEvents = this.eventsGroup.find('.single-event');
+                this.daySpaces = this.eventsGroup.find('.day-space');
 		this.eventSlotHeight = this.eventsGroup.eq(0).children('.top-info').outerHeight();
 		console.log(this.eventSlotHeight)
 		this.modal = this.element.find('.event-modal');
@@ -75,6 +76,19 @@ jQuery(document).ready(function($){
 				//if( !self.animating ) self.openModal($(this));
 			});
 		});
+
+                this.daySpaces.each(function(){
+                        $(this).on('click', function (event) {
+                                var parentOffset = $(this).offset();
+                                var percentCoord = (event.pageY - parentOffset.top) / $(this).height();
+                                var startTime = percentToTime(percentCoord);
+                                var endTime = percentToEndTime(percentCoord);
+
+                                $(this).append("<li class='single-event' data-start='"+startTime+"' data-end='"+endTime+"' bgcolor='rgba(0,100,100,0.7)'><a href=''><em class='event-name'>Reserva</em></a></li>");
+		                self.singleEvents = self.eventsGroup.find('.single-event');
+                                self.placeEvents();
+                        });
+                }); 
 
 		/* Para dibujar la linea de horario:
 		 */
@@ -433,3 +447,24 @@ jQuery(document).ready(function($){
 		});
 	}
 });
+
+function percentToTime(percent) {
+        var hora = Math.floor(percent * 9 + 9);
+        var minuto = Math.floor(((percent * 9 + 9) % 1) * 6) * 10;
+        if (minuto == 60) {
+          minuto = 0;
+        }
+        return hora.toString() + ":" + minuto.toString();
+}
+function percentToEndTime(percent) {
+        var hora = Math.floor(percent * 9 + 9) + 1;
+        if (hora > 18) {
+          hora = 18;
+        }
+        var minuto = Math.floor(((percent * 9 + 9) % 1) * 6) * 10;
+        if (minuto == 60 || hora == 18) {
+          minuto = 0;
+        }
+
+        return hora.toString() + ":" + minuto.toString();
+}
