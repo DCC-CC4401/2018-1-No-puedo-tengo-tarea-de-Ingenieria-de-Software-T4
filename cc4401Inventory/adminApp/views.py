@@ -55,11 +55,11 @@ def actions_panel(request):
     try:
         if request.method == "GET":
             if request.GET["filter"]=='vigentes':
-                loans = Loan.objects.filter(ending_date_time__gt=actual_date).order_by('starting_date_time')
+                loans = Loan.objects.filter(ending_date_time__gt=actual_date, loan_state='V').order_by('starting_date_time')
             elif request.GET["filter"]=='caducados':
-                loans = Loan.objects.filter(ending_date_time__lt=actual_date, article__state='P').order_by('starting_date_time')
+                loans = Loan.objects.filter(ending_date_time__lt=actual_date, loan_state='C').order_by('starting_date_time')
             elif request.GET["filter"]=='perdidos':
-                loans = Loan.objects.filter(ending_date_time__lt=actual_date, article__state='L').order_by('starting_date_time')
+                loans = Loan.objects.filter(ending_date_time__lt=actual_date, loan_state='P').order_by('starting_date_time')
             else:
                 loans = Loan.objects.all().order_by('starting_date_time')
     except:
@@ -101,15 +101,14 @@ def actions_panel(request):
     }
     return render(request, 'actions_panel.html', context)
 
-
+@login_required
 def modify_reservations(request):
     user = request.user
     if not (user.is_superuser and user.is_staff):
         return redirect('/')
     if request.method == "POST":
-
         accept = True if (request.POST["accept"] == "1") else False
-        reservations = Reservation.objects.filter(id__in=request.POST["selected"])
+        reservations = Reservation.objects.filter(id__in=request.POST.getlist("selected"))
         if accept:
             for reservation in reservations:
                 reservation.state = 'A'
@@ -118,5 +117,24 @@ def modify_reservations(request):
             for reservation in reservations:
                 reservation.state = 'R'
                 reservation.save()
+
+    return redirect('/admin/actions-panel')
+
+@login_required
+def modify_loans(request):
+    user = request.user
+    if not (user.is_superuser and user.is_staff):
+        return redirect('/')
+    if request.method == "POST":
+        accept = True if (request.POST["accept"] == "1") else False
+        loans = Loan.objects.filter(id__in=request.POST.getlist("selected"))
+        if accept:
+            for loan in loans:
+                loan.loan_state = 'R'
+                loan.save()
+        else:
+            for loan in loans:
+                loan.loan_state = 'P'
+                loan.save()
 
     return redirect('/admin/actions-panel')
