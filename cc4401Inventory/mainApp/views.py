@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.utils.timezone import localtime
+from django.db.models.functions import Lower
 import datetime
+from spacesApp.models import Space
 from articlesApp.models import Article
 from reservationsApp.models import Reservation
 from django.contrib.auth.decorators import login_required
@@ -12,8 +14,17 @@ def landing_articles(request):
     return render(request, 'articulos.html', context)
 
 
+
+def index_spaces(request):
+    spaces = Space.objects.all()
+    print("hola")
+    context = {'espacios': spaces}
+
+    return render(request, 'filter_spaces.html', context)
+
 @login_required
 def landing_spaces(request, date=None):
+    spaces = Space.objects.all().order_by(Lower('name'))
 
     if date:
         current_date = date
@@ -52,7 +63,8 @@ def landing_spaces(request, date=None):
     context = {'reservations' : res_list,
                'current_date' : current_date,
                'controls' : move_controls,
-               'actual_monday' : monday}
+               'actual_monday' : monday,
+               'espacios' : spaces}
     return render(request, 'espacios.html', context)
 
 
@@ -84,3 +96,8 @@ def search(request):
 
         products = None if (request.GET['query'] == "") else articles
         return landing_search(request, products)
+
+def filtro_spaces(request):
+    if request.method =="POST":
+        context={}
+        return
