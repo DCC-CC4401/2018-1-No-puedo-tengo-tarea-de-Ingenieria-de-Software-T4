@@ -3,13 +3,15 @@ from django.utils.timezone import localtime
 import datetime
 from articlesApp.models import Article
 from reservationsApp.models import Reservation
+from loansApp.models import Loan
 from django.contrib.auth.decorators import login_required
 
 
 @login_required
 def landing_articles(request):
-    context = {}
-    return render(request, 'articulos.html', context)
+    articles = Article.objects.all()
+    context = {'productos' : articles}
+    return landing_search(request, articles)
 
 
 @login_required
@@ -58,29 +60,56 @@ def landing_spaces(request, date=None):
 
 @login_required
 def landing_search(request, products):
-    if not products:
-        return landing_articles(request)
-    else:
-        context = {'productos' : products,
-                   'colores' : {'D': '#009900',
-                                'R': '#ffcc00',
-                                'P': '#3333cc',
-                                'L': '#cc0000'}
-                   }
-        return render(request, 'articulos.html', context)
-
+    context = {'productos' : products,
+                 'colores' : {'D': '#009900',
+                              'R': '#ffcc00',
+                              'P': '#3333cc',
+                              'L': '#cc0000'}
+              }
+    return render(request, 'articulos.html', context)
 
 @login_required
 def search(request):
     if request.method == "GET":
-        query = request.GET['query']
-        #a_type = "comportamiento_no_definido"
-        a_state = "A" if (request.GET['estado'] == "A") else request.GET['estado']
+        nombre = request.GET['nombre']
+        articles = Article.objects.filter(name__icontains=nombre.lower())
+        prestamos = Loan.objects.filter(article__name__icontains=nombre.lower())
 
-        if not (a_state == "A"):
-            articles = Article.objects.filter(state=a_state,name__icontains=query.lower())
-        else:
-            articles = Article.objects.filter(name__icontains=query.lower())
+        # ID filtering
+        id = request.GET['id']
+        if id != "":
+            articles = articles.filter(pk=id)                # Filtrar los articulos cuya pk=id
+            if articles.exists():
+                prestamos = prestamos.filter(article__id=id) # Si existen guardarlos con sus prestamos
+            else:
+                articles = None
+                prestamos = None
 
-        products = None if (request.GET['query'] == "") else articles
-        return landing_search(request, products)
+        # State filtering
+        estado = request.GET['estado']
+        if estado != "" and articles != None:
+            articles = articles.filter(state=estado)
+            if articles.exists():
+                for a in articles:
+                    auxid = a.id
+                    if prestamos.filter(article_id=auxid).exists():
+                        prestamos = prestamos.filter(article__id=auxid) # Si existe uno, guardar sus prestamos
+            else:
+                articles = None
+                prestamos = None
+
+        # Time range filtering
+        finicial = request.GET['finicial']
+        hinicial = request.GET['hinicial']
+        ffinal = request.GET['ffinal']
+        hfinal = request.GET['hfinal']
+        if finicial != "" and ffinal != "" and articles != None:
+            cinicial = finicial + " " + hinicial
+            cfinal = ffinal + " " + hfinal
+            prestamos = prestamos.filter(starting_date_time__gte = cinicial,ending_date_time__lte = cfinal)
+            if prestamos.exists():
+                for p in prestamos:
+                    auxid = p.article.id
+                    articles = articles.exclude(pk=auxid)
+
+    return landing_search(request, articles)

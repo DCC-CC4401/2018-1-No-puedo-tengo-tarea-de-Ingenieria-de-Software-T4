@@ -191,7 +191,6 @@ def article_create(request):
             extension = os.path.splitext(u_file.name)[1]
             new_article = form.save(commit=False)
             new_article.image.save("_image" + extension, u_file)
-            #new_article.state = STATES(request.POST["state"])
             new_article.save()
             articles = Article.objects.all()
             spaces = Space.objects.all()
