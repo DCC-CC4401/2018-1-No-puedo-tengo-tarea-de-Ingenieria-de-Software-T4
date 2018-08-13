@@ -150,40 +150,9 @@ def article_delete(request, article_id):
         except:
             return redirect('/')
 
-"""
-@login_required
-def article_create(request, template_name='article_form.html'):
-    form = ArticleForm(request.POST or None)
-    if form.is_valid():
-        form.save()
-        messages.success(request, 'Artículo  creado')
-        articles = Article.objects.all()
-        spaces = Space.objects.all()
-        context = {
-            'articles': articles,
-            'spaces': spaces
-        }
-        return render(request, 'items_panel.html', context)
-    return render(request, template_name, {'form': form})
-
-"""
-
-
-def handle_uploaded_file(f):
-    destination = open('root', 'wb+')
-    for chunk in f.chunks():
-        destination.write(chunk)
-    destination.close()
-
 
 @login_required
 def article_create(request):
-    STATES = (
-        ('D', 'Disponible'),
-        ('P', 'En préstamo'),
-        ('R', 'En reparación'),
-        ('L', 'Perdido')
-    )
     if request.method == "POST":
         form = ArticleForm(request.POST, request.FILES)
         if form.is_valid():
@@ -192,6 +161,7 @@ def article_create(request):
             new_article = form.save(commit=False)
             new_article.image.save("_image" + extension, u_file)
             new_article.save()
+            messages.success(request, 'Artículo Creado')
             articles = Article.objects.all()
             spaces = Space.objects.all()
             context = {
