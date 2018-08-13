@@ -80,6 +80,7 @@ class Item(models.Model):
         abstract = True
 
 
+
 class Action(models.Model):
     STATES = (
         ('A', 'Aceptado'),

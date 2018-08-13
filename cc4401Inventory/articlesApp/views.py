@@ -1,14 +1,12 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from articlesApp.models import Article
+from articlesApp.forms import ArticleForm
+from spacesApp.models import Space
 from loansApp.models import Loan
-from django.db import models
 from datetime import datetime, timedelta
-
-import random, os
-import pytz
+import pytz, os
 from django.contrib import messages
-
 
 
 @login_required
@@ -121,9 +119,7 @@ def article_edit_image(request, article_id):
         a = Article.objects.get(id=article_id)
         a.image.save(str(article_id)+"_image"+extension, u_file)
         a.save()
-
     return redirect('/article/' + str(article_id) + '/edit')
-
 
 
 @login_required
@@ -132,5 +128,79 @@ def article_edit_description(request, article_id):
         a = Article.objects.get(id=article_id)
         a.description = request.POST["description"]
         a.save()
-
     return redirect('/article/' + str(article_id) + '/edit')
+
+
+@login_required
+def article_delete(request, article_id):
+    if not request.user.is_staff:
+        return redirect('/')
+    else:
+        try:
+            article = Article.objects.get(id=article_id)
+            article.delete()
+            messages.success(request, 'Artículo eliminado')
+            articles = Article.objects.all()
+            spaces = Space.objects.all()
+            context = {
+                'articles': articles,
+                'spaces': spaces
+            }
+            return render(request, 'items_panel.html', context)
+        except:
+            return redirect('/')
+
+"""
+@login_required
+def article_create(request, template_name='article_form.html'):
+    form = ArticleForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+        messages.success(request, 'Artículo  creado')
+        articles = Article.objects.all()
+        spaces = Space.objects.all()
+        context = {
+            'articles': articles,
+            'spaces': spaces
+        }
+        return render(request, 'items_panel.html', context)
+    return render(request, template_name, {'form': form})
+
+"""
+
+
+def handle_uploaded_file(f):
+    destination = open('root', 'wb+')
+    for chunk in f.chunks():
+        destination.write(chunk)
+    destination.close()
+
+
+@login_required
+def article_create(request):
+    STATES = (
+        ('D', 'Disponible'),
+        ('P', 'En préstamo'),
+        ('R', 'En reparación'),
+        ('L', 'Perdido')
+    )
+    if request.method == "POST":
+        form = ArticleForm(request.POST, request.FILES)
+        if form.is_valid():
+            u_file = request.FILES["image"]
+            extension = os.path.splitext(u_file.name)[1]
+            new_article = form.save(commit=False)
+            new_article.image.save("_image" + extension, u_file)
+            #new_article.state = STATES(request.POST["state"])
+            new_article.save()
+            articles = Article.objects.all()
+            spaces = Space.objects.all()
+            context = {
+                'articles': articles,
+                'spaces': spaces
+            }
+            return render(request, 'items_panel.html', context)
+    else:
+        form = ArticleForm()
+    return render(request, 'article_form.html', {'form': form})
+

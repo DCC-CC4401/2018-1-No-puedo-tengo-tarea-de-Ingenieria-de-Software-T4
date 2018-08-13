@@ -4,10 +4,11 @@ from reservationsApp.models import Reservation
 from loansApp.models import Loan
 from articlesApp.models import Article
 from spacesApp.models import Space
-from mainApp.models import User
+from mainApp.models import User, Item
 from datetime import datetime, timedelta, date
 import pytz
 from django.utils.timezone import localtime
+
 
 @login_required
 def user_panel(request):
@@ -20,18 +21,6 @@ def user_panel(request):
     }
     return render(request, 'user_panel.html', context)
 
-@login_required
-def items_panel(request):
-    user = request.user
-    if not (user.is_superuser and user.is_staff):
-        return redirect('/')
-    articles = Article.objects.all()
-    spaces = Space.objects.all()
-    context = {
-        'articles': articles,
-        'spaces': spaces
-    }
-    return render(request, 'items_panel.html', context)
 
 @login_required
 def actions_panel(request):
@@ -101,6 +90,7 @@ def actions_panel(request):
     }
     return render(request, 'actions_panel.html', context)
 
+
 @login_required
 def modify_reservations(request):
     user = request.user
@@ -120,6 +110,7 @@ def modify_reservations(request):
 
     return redirect('/admin/actions-panel')
 
+
 @login_required
 def modify_loans(request):
     user = request.user
@@ -138,3 +129,18 @@ def modify_loans(request):
                 loan.save()
 
     return redirect('/admin/actions-panel')
+
+
+@login_required
+def items_panel(request):
+    user = request.user
+    if not (user.is_superuser and user.is_staff):
+        return redirect('/')
+    articles = Article.objects.all()
+    spaces = Space.objects.all()
+    context = {
+        'articles': articles,
+        'spaces': spaces
+    }
+    return render(request, 'items_panel.html', context)
+
