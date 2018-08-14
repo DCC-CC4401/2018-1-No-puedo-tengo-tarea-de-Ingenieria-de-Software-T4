@@ -79,14 +79,17 @@ jQuery(document).ready(function($){
 
                 this.daySpaces.each(function(){
                         $(this).on('click', function (event) {
+                                event.preventDefault();
                                 var parentOffset = $(this).offset();
                                 var percentCoord = (event.pageY - parentOffset.top) / $(this).height();
                                 var startTime = percentToTime(percentCoord);
                                 var endTime = percentToEndTime(percentCoord);
 
-                                $(this).append("<li class='single-event' data-start='"+startTime+"' data-end='"+endTime+"' bgcolor='rgba(0,100,100,0.7)'><a href=''><em class='event-name'>Reserva</em></a></li>");
-		                self.singleEvents = self.eventsGroup.find('.single-event');
+                                var $element = $("<li class='single-event' data-start='"+startTime+"' data-end='"+endTime+"' data-content='newReservation' bgcolor='rgba(0,100,100,0.7)'><a href=''><em class='event-name'>Nueva Reserva</em></a></li>");
+                                $(this).append($element);
+		                self.singleEvents = self.eventsGroup.find('.single-event'); // Update single events to work fine with placeEvents
                                 self.placeEvents();
+                                if ( !self.animating ) self.openModal($element.find("a"));
                         });
                 }); 
 
