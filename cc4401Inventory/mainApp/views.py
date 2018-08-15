@@ -101,3 +101,7 @@ def filtro_spaces(request):
     if request.method =="POST":
         context={}
         return
+
+def new_reservation(request):
+    context = {}
+    return render(request, 'nueva_reserva.html', context)
