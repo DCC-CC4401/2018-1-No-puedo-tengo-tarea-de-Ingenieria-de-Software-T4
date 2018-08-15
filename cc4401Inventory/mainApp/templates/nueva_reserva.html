@@ -8,7 +8,8 @@
 </div>
 <div class="row">
 <div class="col-sm-5">
-  <form class="reservation-form" id="rForm">
+  <form class="reservation-form" id="rForm" action="makeReservation">
+  {% csrf_token %}
   <div class="form-group">
     <br>
     <label for="espacioId">Sala:</label><br>
@@ -19,9 +20,9 @@
     <label for="fechaInput">Dia:</label><br>
     <input type="date" name="fechaReserva" id="fechaInput"><br><br>
     <label for="fechaInput">Hora Inicio:</label><br>
-    <input type="time" name="horaInicio" id="horaIn"><br>
+    <input type="time" name="horaInicio" id="horaIn" value="{{h_ini}}"><br>
     <label for="fechaInput">Hora Termino:</label><br>
-    <input type="time" name="horaTermino" id="horaFin"><br><br>
+    <input type="time" name="horaTermino" id="horaFin" value="{{h_fin}}"><br><br>
     <input type="submit" id="rFormBtn" class="btn btn-primary" value="Submit"><br>
     </div>
   </form>

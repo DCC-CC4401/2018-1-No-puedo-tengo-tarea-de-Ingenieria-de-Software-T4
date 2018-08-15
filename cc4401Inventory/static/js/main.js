@@ -84,7 +84,7 @@ jQuery(document).ready(function($){
                                 var startTime = percentToTime(percentCoord);
                                 var endTime = percentToEndTime(percentCoord);
 
-                                var $element = $("<li class='single-event' data-start='"+startTime+"' data-end='"+endTime+"' data-content='newReservation' bgcolor='rgba(0,100,100,0.7)'><a href=''><em class='event-name'>Nueva Reserva</em></a></li>");
+                                var $element = $("<li class='single-event' data-start='"+startTime+"' data-end='"+endTime+"' get-params='hi="+startTime+"&hf="+endTime+"' data-content='newReservation' bgcolor='rgba(0,100,100,0.7)'><a href=''><em class='event-name'>Nueva Reserva</em></a></li>");
                                 $(this).append($element);
 		                self.singleEvents = self.eventsGroup.find('.single-event'); // Update single events to work fine with placeEvents
                                 self.placeEvents();
@@ -185,11 +185,23 @@ jQuery(document).ready(function($){
 		this.modal.attr('data-event', event.parent().attr('data-event'));
 
 		//update event content
-		this.modalBody.find('.event-info').load(event.parent().attr('data-content')+' .event-info > *', function(data){
+		this.modalBody.find('.event-info').load(event.parent().attr('data-content')+'?'+event.parent().attr('get-params')+' .event-info > *', function(data){
 			//once the event content has been loaded
 			self.element.addClass('content-loaded');
-                        $("#rFormBtn").click(function(e) {
+                        $("#rForm").submit(function(e) {
                           console.log("submiting...");
+                          var form = $(this);
+                          var url = form.attr('action');
+
+                          $.ajax({
+                                 type: "POST",
+                                 url: url,
+                                 data: form.serialize(),
+                                 success: function(data)
+                                 {
+                                     alert(data);
+                                 }
+                                });
                           e.preventDefault();
                         });
 		});
