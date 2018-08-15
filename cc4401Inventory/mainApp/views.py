@@ -15,7 +15,7 @@ def landing_articles(request):
 
 
 @login_required
-def landing_spaces(request, date=None, espacios_filtrados=''):
+def landing_spaces(request, date=None, espacios_filtrados=[]):
     spaces = Space.objects.all().order_by(Lower('name'))
 
     if date:
@@ -101,11 +101,16 @@ def search(request):
         return landing_search(request, products)
 
 
+cache_checked=[]
+
 # Filtra espacios segun opciones de checkbox
 def filtro_spaces(request):
+    global cache_checked
     if request.method == "POST":
         espacios = request.POST.getlist('checkbox')
 
-        return landing_spaces(request, espacios_filtrados=espacios)
+        cache_checked=espacios
+
+        return landing_spaces(request, espacios_filtrados=cache_checked)
     else:
-        return landing_spaces(request)
+        return landing_spaces(request, espacios_filtrados=cache_checked)
