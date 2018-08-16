@@ -24,3 +24,15 @@ def space_delete(request, space_id):
         except:
             return redirect('/')
 
+@login_required
+def space_data(request, space_id):
+    try:
+        space = Space.objects.get(id=space_id)
+        context = {
+            'space': space
+        }
+        return render(request, 'spacesApp/space_data.html', context)
+    except Exception as ex:
+        print('Exception in space_data.')
+        print(ex)
+        return redirect('/')

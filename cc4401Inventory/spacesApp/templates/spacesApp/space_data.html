@@ -1,0 +1,60 @@
+
+{% extends 'application_layout.html' %}
+
+{% load static %}
+
+{% block title %}
+    Ficha de Espacio: {{ space.name }}
+{% endblock %}
+
+
+{% block body %}
+    <div class="row justify-content-center">
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1>
+                        {{ space.name }}
+                        {% if space.state == "D" %}
+                            <span class="badge badge-pill badge-success"><i class="fas fa-chevron-left"></i> {{  space.get_state_display }}</span>
+                        {% elif loan.article.state == "P" %}
+                            <span class="badge badge-pill badge-primary"><i class="fas fa-chevron-left"></i> {{  space.get_state_display }}</span>
+                        {% elif loan.article.state == "R" %}
+                            <span class="badge badge-pill badge-warning"><i class="fas fa-chevron-left"></i> {{  space.get_state_display }}</span>
+                        {% endif %}
+                    </h1>
+                </div>
+                <div class="w-100"></div>
+                <div class="col-md-12">
+                    <h4>Capacidad: {{ space.capacity }}</h4>
+                </div>
+                <div class="w-100"></div>
+                <div class="col-md-12">
+                    {% if loan.article.image %}
+                        <img src= " {% static loan.article.image.url %}" class="img-fluid" alt="Foto" style="height: 400px" />
+                    {% else %}
+                        <img class="card-img-top" src="{% static 'img/items/default_article.jpg' %}" alt="Card image cap">
+                    {% endif %}
+                </div>
+                <div class="w-100"></div>
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header article-description-title">Descripción</div>
+                        <div class="card-body">
+                            <p class="card-text">{{ space.description }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-1"></div>
+        <div class = "col-md-6">
+            <div class="row">
+                <h1>Reservar</h1>
+            </div>
+            <div class="row">
+                {% include '_schedule_landing.html' %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
