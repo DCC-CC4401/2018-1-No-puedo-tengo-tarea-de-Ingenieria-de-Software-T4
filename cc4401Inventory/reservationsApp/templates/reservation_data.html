@@ -1,0 +1,78 @@
+
+{% extends 'application_layout.html' %}
+
+{% load static %}
+
+{% block title %}
+    Ficha de Reserva Espacio: {{ space.name }}
+{% endblock %}
+
+
+{% block body %}
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <div class="row">
+                <h1>
+                    Reserva
+                    {% if reservation.reservation_state == "P" %}
+                    <span class="badge badge-pill badge-primary"><i class="fas fa-chevron-left"></i> {{  reservation.get_reservation_state_display }}</span>
+                    {% elif reservation.reservation_state == "V" %}
+                    <span class="badge badge-pill badge-success"><i class="fas fa-chevron-left"></i> {{   reservation.get_reservation_state_display }}</span>
+                    {% elif reservation.reservation_state == "R" %}
+                    <span class="badge badge-pill badge-danger"><i class="fas fa-chevron-left"></i> {{  reservation.get_reservation_state_display }}</span>
+                    {% endif %}
+                </h1>
+            </div>
+
+            <div class="row">
+                <h2 class="space_name">
+                    {{ space.name }}
+                    {% if space.state == "D" %}
+                        <span class="badge badge-pill badge-success"><i class="fas fa-chevron-left"></i> {{  space.get_state_display }}</span>
+                    {% elif space.state == "P" %}
+                        <span class="badge badge-pill badge-primary"><i class="fas fa-chevron-left"></i> {{  space.get_state_display }}</span>
+                    {% elif space.state == "R" %}
+                        <span class="badge badge-pill badge-danger"><i class="fas fa-chevron-left"></i> {{  space.get_state_display }}</span>
+                    {% endif %}
+                </h2>
+            </div>
+            {% if space.image %}
+                <img src= " {% static space.image.url %}" class="img-fluid" alt="Foto" style="height: 400px" />
+            {% else %}
+                <img class="card-img-top" src="{% static 'img/items/default_space.jpg' %}" alt="Card image cap">
+            {% endif %}
+            <div class="card">
+                <div class="card-header article-description-title">Descripción</div>
+                <div class="card-body">
+                    <p class="card-text">{{ space.description }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-1"></div>
+        <div class = "col-md-4">
+            <div class="row">
+                <h3 class="block-title">Detalles</h3>
+            </div>
+            <div class="row">
+                <h5>Usuario: {{ reservation.user.get_full_name }}</h5>
+            </div>
+            <div class="row">
+                <h5>Inicio de la Reserva: {{ pretty_starting_dt }}</h5>
+            </div>
+            <div class="row">
+                <h5>Término de la Reserva: {{ pretty_ending_dt }}</h5>
+            </div>
+            {% if is_requesting_user %}
+                <div class="row mt-3">
+                    <form action="{% url 'delete_reservation' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="reservation_id" value="{{ reservation.id }}">
+                        <button type="submit" class="btn btn-danger">Cancelar reserva</button>
+                    </form>
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+{% endblock %}
+
