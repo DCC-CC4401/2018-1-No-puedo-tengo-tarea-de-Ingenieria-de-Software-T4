@@ -35,7 +35,7 @@
 			<li class="events-group">
 				<div class="top-info"><span>Lunes</span></div>
 
-				<ul class="day-space">
+				<ul class="day-space" date-info="{{actual_monday}}">
 					{% for r in reservations.0 %}
 
 					<li class="single-event" data-start="{{r.1}}" data-end="{{r.2}}" bgcolor="{{r.3}}">
@@ -52,7 +52,7 @@
 			<li class="events-group">
 				<div class="top-info"><span>Martes</span></div>
 
-				<ul class="day-space">
+				<ul class="day-space" date-info="{{actual_tuesday}}">
 
 					{% for r in reservations.1 %}
 
@@ -69,7 +69,7 @@
 			<li class="events-group">
 				<div class="top-info"><span>Miércoles</span></div>
 
-				<ul class="day-space">
+				<ul class="day-space" date-info="{{actual_wednesday}}">
 					{% for r in reservations.2 %}
 
 					<li class="single-event" data-start="{{r.1}}" data-end="{{r.2}}" bgcolor="{{r.3}}" >
@@ -85,7 +85,7 @@
 			<li class="events-group">
 				<div class="top-info"><span>Jueves</span></div>
 
-				<ul class="day-space">
+				<ul class="day-space" date-info="{{actual_thursday}}">
 					{% for r in reservations.3 %}
 
 					<li class="single-event" data-start="{{r.1}}" data-end="{{r.2}}"  bgcolor="{{r.3}}">
@@ -101,7 +101,7 @@
 			<li class="events-group">
 				<div class="top-info"><span>Viernes</span></div>
 
-				<ul class="day-space">
+				<ul class="day-space" date-info="{{actual_friday}}">
 					{% for r in reservations.4 %}
 
 					<li class="single-event" data-start="{{r.1}}" data-end="{{r.2}}" bgcolor="{{r.3}}">

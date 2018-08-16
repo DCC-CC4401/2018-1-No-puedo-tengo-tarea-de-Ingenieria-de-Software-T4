@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.utils.timezone import localtime
 from django.db.models.functions import Lower
@@ -6,7 +7,7 @@ from spacesApp.models import Space
 from articlesApp.models import Article
 from reservationsApp.models import Reservation
 from django.contrib.auth.decorators import login_required
-
+from django.contrib import messages
 
 @login_required
 def landing_articles(request):
@@ -63,10 +64,18 @@ def landing_spaces(request, date=None, espacios_filtrados=[]):
     delta = (datetime.datetime.strptime(current_date, "%Y-%m-%d").isocalendar()[2]) - 1
     monday = (
         (datetime.datetime.strptime(current_date, "%Y-%m-%d") - datetime.timedelta(days=delta)).strftime("%d/%m/%Y"))
+    tuesday = ((datetime.datetime.strptime(current_date, "%Y-%m-%d") - datetime.timedelta(days=delta-1)).strftime("%d/%m/%Y"))
+    wednesday = ((datetime.datetime.strptime(current_date, "%Y-%m-%d") - datetime.timedelta(days=delta-2)).strftime("%d/%m/%Y"))
+    thursday = ((datetime.datetime.strptime(current_date, "%Y-%m-%d") - datetime.timedelta(days=delta-3)).strftime("%d/%m/%Y"))
+    friday = ((datetime.datetime.strptime(current_date, "%Y-%m-%d") - datetime.timedelta(days=delta-4)).strftime("%d/%m/%Y"))
     context = {'reservations': res_list,
                'current_date': current_date,
                'controls': move_controls,
                'actual_monday': monday,
+               'actual_tuesday': tuesday,
+               'actual_wednesday': wednesday,
+               'actual_thursday': thursday,
+               'actual_friday': friday,
                'espacios_filtrados': espacios_filtrados,
                'espacios': spaces}
     return render(request, 'espacios.html', context)
@@ -107,6 +116,7 @@ cache_checked = []
 
 # Filtra espacios segun opciones de checkbox
 def filtro_spaces(request):
+
     global cache_checked
     if request.method == "POST":
         espacios = request.POST.getlist('checkbox')
@@ -116,3 +126,40 @@ def filtro_spaces(request):
         return landing_spaces(request, espacios_filtrados=cache_checked)
     else:
         return landing_spaces(request, espacios_filtrados=cache_checked)
+
+def new_reservation(request):
+    hini = request.GET.get('hi','')
+    if hini.startswith('9:'):
+      hini = '0' + hini
+    if hini.endswith(':0'):
+      hini += '0'
+    hfin = request.GET.get('hf','')
+    if hfin.endswith(':0'):
+      hfin += '0'
+    dia = request.GET.get('dt', '')
+    dia = datetime.datetime.strptime(dia, '%d/%m/%Y')
+    dia = dia.strftime('%Y-%m-%d')
+    context = {"h_ini": hini,
+               "h_fin": hfin,
+               "dia": dia,
+               "spaces": Space.objects.all()}
+    return render(request, 'nueva_reserva.html', context)
+
+def make_reservation(request):
+    if request.method == 'POST':
+      r_date = request.POST['fechaReserva']
+      hora_ini = request.POST['horaInicio']
+      hora_fin = request.POST['horaTermino']
+      space = Space.objects.get(id = request.POST['espacio'])
+
+      if request.user.enabled:
+        string_inicio = r_date + " " + hora_ini
+        start_datetime = datetime.datetime.strptime(string_inicio, '%Y-%m-%d %H:%M')
+        string_fin = r_date + " " + hora_fin
+        end_datetime = datetime.datetime.strptime(string_fin, '%Y-%m-%d %H:%M')
+        reservation = Reservation(space=space, starting_date_time=start_datetime, ending_date_time=end_datetime, user=request.user)
+        reservation.save()
+        messages.success(request, 'Pedido realizado con exito')
+      else:
+        messages.warning(request, 'Usuario no habilitado para pedir prestamos')
+      return HttpResponse("Reserva realizada con exito!")

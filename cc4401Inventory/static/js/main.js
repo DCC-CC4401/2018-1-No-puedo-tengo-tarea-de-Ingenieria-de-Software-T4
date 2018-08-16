@@ -20,7 +20,6 @@ jQuery(document).ready(function($){
 		this.singleEvents = this.eventsGroup.find('.single-event');
                 this.daySpaces = this.eventsGroup.find('.day-space');
 		this.eventSlotHeight = this.eventsGroup.eq(0).children('.top-info').outerHeight();
-		console.log(this.eventSlotHeight)
 		this.modal = this.element.find('.event-modal');
 		this.modalHeader = this.modal.find('.header');
 		this.modalHeaderBg = this.modal.find('.header-bg');
@@ -84,8 +83,9 @@ jQuery(document).ready(function($){
                                 var percentCoord = (event.pageY - parentOffset.top) / $(this).height();
                                 var startTime = percentToTime(percentCoord);
                                 var endTime = percentToEndTime(percentCoord);
+                                var dayDate = $(this).attr('date-info');
 
-                                var $element = $("<li class='single-event' data-start='"+startTime+"' data-end='"+endTime+"' data-content='newReservation' bgcolor='rgba(0,100,100,0.7)'><a href=''><em class='event-name'>Nueva Reserva</em></a></li>");
+                                var $element = $("<li class='single-event' data-start='"+startTime+"' data-end='"+endTime+"' get-params='hi="+startTime+"&hf="+endTime+"&dt="+dayDate+"' data-content='newReservation' bgcolor='rgba(0,100,100,0.7)'><a href=''><em class='event-name'>Nueva Reserva</em></a></li>");
                                 $(this).append($element);
 		                self.singleEvents = self.eventsGroup.find('.single-event'); // Update single events to work fine with placeEvents
                                 self.placeEvents();
@@ -109,7 +109,6 @@ jQuery(document).ready(function($){
 					'4': 'Jueves',
 					'5': 'Viernes'
 		}
-		console.log(dias);
 		var time_now_top = self.eventSlotHeight*(time_now - self.timelineStart)/self.timelineUnitDuration*(20/50.0) + 50;
 
 		if(hh>= 9 && hh < 18){
@@ -187,9 +186,26 @@ jQuery(document).ready(function($){
 		this.modal.attr('data-event', event.parent().attr('data-event'));
 
 		//update event content
-		this.modalBody.find('.event-info').load(event.parent().attr('data-content')+'.html .event-info > *', function(data){
+		this.modalBody.find('.event-info').load(event.parent().attr('data-content')+'?'+event.parent().attr('get-params')+' .event-info > *', function(data){
 			//once the event content has been loaded
 			self.element.addClass('content-loaded');
+                        $("#rForm").submit(function(e) {
+                          console.log("submiting...");
+                          var form = $(this);
+                          var url = form.attr('action');
+
+                          $.ajax({
+                                 type: "POST",
+                                 url: url,
+                                 data: form.serialize(),
+                                 success: function(data)
+                                 {
+                                     if(alert(data)){}
+                                     else window.location.reload();
+                                 }
+                                });
+                          e.preventDefault();
+                        });
 		});
 
 		this.element.addClass('modal-is-open');
