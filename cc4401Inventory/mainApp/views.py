@@ -67,6 +67,7 @@ def landing_spaces(request, date=None, espacios_filtrados=[]):
                'current_date': current_date,
                'controls': move_controls,
                'actual_monday': monday,
+               'espacios_filtrados': espacios_filtrados,
                'espacios': spaces}
     return render(request, 'espacios.html', context)
 
@@ -101,7 +102,8 @@ def search(request):
         return landing_search(request, products)
 
 
-cache_checked=[]
+cache_checked = []
+
 
 # Filtra espacios segun opciones de checkbox
 def filtro_spaces(request):
@@ -109,7 +111,7 @@ def filtro_spaces(request):
     if request.method == "POST":
         espacios = request.POST.getlist('checkbox')
 
-        cache_checked=espacios
+        cache_checked = espacios
 
         return landing_spaces(request, espacios_filtrados=cache_checked)
     else:
