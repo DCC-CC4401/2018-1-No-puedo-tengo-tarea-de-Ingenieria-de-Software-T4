@@ -9,94 +9,193 @@
 
 
 {% block body %}
-
-  <div class="row">
-    <div class="col-md-4 offset-1">
-
-      <div class="row">
-        <h1 class="article-name">
-          {{ article.name }}
-        {% if article.state == "D" %}
-            <span class="badge badge-pill badge-success"><i class="fas fa-chevron-left"></i> {{  article.get_state_display }}</span>
-          {% elif article.state == "P" %}
-            <span class="badge badge-pill badge-primary"><i class="fas fa-chevron-left"></i> {{  article.get_state_display }}</span>
-          {% elif article.state == "L" %}
-            <span class="badge badge-pill badge-danger"><i class="fas fa-chevron-left"></i> {{  article.get_state_display }}</span>
-          {% elif article.state == "R" %}
-            <span class="badge badge-pill badge-warning"><i class="fas fa-chevron-left"></i> {{  article.get_state_display }}</span>
-          {% endif %}
-         </h1>
-      </div>
-        {% if article.image %}
-            <img src= " {% static article.image.url %}" class="img-fluid" alt="Foto" style="height: 400px" />
-        {% else %}
-            <img class="card-img-top" src="{% static 'img/items/default_article.jpg' %}" alt="Card image cap">
-        {% endif %}
-
-      <div class="card">
-        <div class="card-header article-description-title">Descripción</div>
-        <div class="card-body">
-          <p class="card-text">{{ article.description }}</p>
+    <div class="row justify-content-center">
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1 style="display: inline-block">
+                        {{ article.name }}
+                        {% if user_is_staff %}
+                            <button type="button" class="btn btn-light btn-sm" data-toggle="modal" data-target="#editName">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        {% endif %}
+                    </h1>
+                    <h3 style="display: inline-block">
+                        {% if article.state == "D" %}
+                            <span class="badge badge-pill badge-success"><i class="fas fa-chevron-left"></i> {{  article.get_state_display }}</span>
+                        {% elif article.state == "P" %}
+                            <span class="badge badge-pill badge-primary"><i class="fas fa-chevron-left"></i> {{  article.get_state_display }}</span>
+                        {% elif article.state == "R" %}
+                            <span class="badge badge-pill badge-warning"><i class="fas fa-chevron-left"></i> {{  article.get_state_display }}</span>
+                        {% elif article.state == "L" %}
+                            <span class="badge badge-pill badge-danger"><i class="fas fa-chevron-left"></i> {{  article.get_state_display }}</span>
+                        {% endif %}
+                    </h3>
+                </div>
+                <div class="w-100"></div>
+                <div class="col-md-12">
+                    {% if user_is_staff %}
+                        <button type="button" class="btn btn-light btn-sm" data-toggle="modal" data-target="#editImage">
+                            <i class="fas fa-image"></i> Cambiar Imagen
+                        </button>
+                    {% endif %}
+                </div>
+                <div class="w-100"></div>
+                <div class="col-md-12 mt-2">
+                    {% if article.image %}
+                        <img src= " {% static article.image.url %}" class="img-fluid" alt="Foto"/>
+                    {% else %}
+                        <img class="card-img-top" src="{% static 'img/items/default_article.jpg' %}" alt="Card image cap">
+                    {% endif %}
+                </div>
+                <div class="w-100"></div>
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header article-description-title">
+                            Descripción
+                            {% if user_is_staff %}
+                                <button type="button" class="btn btn-light btn-sm" data-toggle="modal" data-target="#editDescription">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            {% endif %}
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">{{ article.description }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
+        <div class="col-md-1"></div>
+        <div class = "col-md-4">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1>Solicitar Préstamo</h1>
+                </div>
+                <div class="w-100"></div>
+                <div class="col-md-8">
+                    <form action="{% url  'article_request' %}" method="post">
+                        {% csrf_token%}
+                        <input type="hidden" name="article_id" value="{{ article.id }}">
 
-    <div class = "col-md-5 offset-2">
-      <h3 class="block-title">Solicitar reserva</h3>
-      <form action="{% url  'article_request' %}" method="post" class="reservation-form">
-        {% csrf_token%}
-        <input type="hidden" name="article_id" value="{{ article.id }}">
-
-        <div class = "row">
-          <div class="col-md-4">
-            <label>Fecha inicio: </label>
-          </div>
-          <div class="col-md-8">
-            <input name="fecha_inicio" type = "date" name = "desde" /> <label><i class="far fa-calendar-alt"></i></label>
-          </div>
-        </div>
-        <div class = "row">
-          <div class="col-md-4">
-            <label>Hora inicio: </label>
-          </div>
-          <div class="col-md-8">
-            <input name="hora_inicio" type = "time" name = "asdad" />
-          </div>
-        </div>
-
-        <div class = "row">
-          <div class="col-md-4">
-            <label>Fecha fin: </label>
-          </div>
-          <div class="col-md-8">
-            <input name="fecha_fin" type = "date" name = "desde" /> <label><i class="far fa-calendar-alt"></i></label>
-          </div>
-        </div>
-        <div class = "row">
-          <div class="col-md-4">
-            <label>Hora fin: </label>
-          </div>
-          <div class="col-md-8">
-            <input name="hora_fin" type = "time" name = "asdad" />
-          </div>
-        </div>
-        <div class = "row">
-          <button type="submit" class = "btn btn-primary float-right"> Pedir </button>
-        </div>
-      </form>
-
-        <div class = "row reservation-history-container">
-          <h3 class="block-title"> Historial de reservas</h3>
-            <div class="reservation-history">
-                <ul>
-                    {% for elemento in last_loans %}
-                        <li>{{ elemento }}</li>
-                    {% endfor %}
-                </ul>
+                        <div class="form-group">
+                            <label for="beginDate"><i class="fas fa-calendar-alt"></i> Fecha Inicio: </label>
+                            <input type="date" name="fecha_inicio" class="form-control" id="beginDate">
+                        </div>
+                        <div class="form-group">
+                            <label for="beginTime"><i class="fas fa-clock"></i> Hora Inicio: </label>
+                            <input type="time" name="hora_inicio" class="form-control" id="beginTime">
+                        </div>
+                        <div class="form-group">
+                            <label for="endDate"><i class="fas fa-calendar-alt"></i> Fecha Término: </label>
+                            <input type="date" name="fecha_fin" class="form-control" id="endDate">
+                        </div>
+                        <div class="form-group">
+                            <label for="endTime"><i class="fas fa-clock"></i> Hora Término: </label>
+                            <input type="time" name="hora_fin" class="form-control" id="endTime">
+                        </div>
+                        <button type="submit" class="btn btn-success">Solicitar</button>
+                    </form>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <h1>Historial de Préstamos</h1>
+                </div>
+                <div class="w-100"></div>
+                <div class="col-md-8">
+                    {% if last_loans %}
+                        <ul class="list-group">
+                            {% for loan in last_loans %}
+                                <li class="list-group-item">{{ loan }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>
+                            No hay préstamos para mostrar.
+                        </p>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </div>
 
-  </div>
-</div>
+    {% if user_is_staff %}
+        <!--- MODALES PARA EDICION DE CAMPOS--->
+        <!--- SOLO SE GENERAN CUANDO EL USUARIO ES STAFF --->
+
+        <!-- NOMBRE -->
+        <div class="modal fade" id="editName" tabindex="-1" role="dialog" aria-labelledby="editNameLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="editNameLabel">Editar Nombre del Artículo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+                <form action="{% url 'article_edit_name' article.id %}" method="post">
+                    {% csrf_token %}
+              <div class="modal-body">
+                <input name="name" class="form-control" type="text" placeholder="Ingrese Nombre">
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+              </div>
+                </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- IMAGEN -->
+        <div class="modal fade" id="editImage" tabindex="-1" role="dialog" aria-labelledby="editImageLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="editImageLabel">Cambiar Imagen del Artículo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+                <form action="{% url 'article_edit_image' article.id %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+              <div class="modal-body">
+                <label for="editImageControl">Subir Imagen</label>
+                <input type="file" class="form-control-file" id="editImageControl" name="image">
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+              </div>
+                </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- DESCRIPCION -->
+        <div class="modal fade" id="editDescription" tabindex="-1" role="dialog" aria-labelledby="editDescriptionLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="editDescripcionLabel">Editar Descripción del Artículo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+                <form action="{% url 'article_edit_description' article.id %}" method="post">
+                    {% csrf_token %}
+              <div class="modal-body">
+                <input name="description" class="form-control" type="text" placeholder="Ingrese Descripción">
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+              </div>
+                </form>
+            </div>
+          </div>
+        </div>
+    {% endif %}
 {% endblock %}
