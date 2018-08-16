@@ -11,14 +11,14 @@
   <form class="reservation-form" id="rForm" action="makeReservation">
   {% csrf_token %}
   <div class="form-group">
-    <br>
     <label for="espacioId">Sala:</label><br>
     <select name="espacio" id="espacioId">
-      <option>Quincho</option>
-      <option>Salita</option>
+    {% for space in spaces %}
+       <option value="{{ space.id }}">{{ space.name }}</option>
+    {% endfor %}
     </select><br><br>
     <label for="fechaInput">Dia:</label><br>
-    <input type="date" name="fechaReserva" id="fechaInput"><br><br>
+    <input type="date" name="fechaReserva" id="fechaInput" value="{{dia}}"><br><br>
     <label for="fechaInput">Hora Inicio:</label><br>
     <input type="time" name="horaInicio" id="horaIn" value="{{h_ini}}"><br>
     <label for="fechaInput">Hora Termino:</label><br>

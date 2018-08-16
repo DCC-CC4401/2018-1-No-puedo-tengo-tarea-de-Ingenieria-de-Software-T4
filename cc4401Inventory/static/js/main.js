@@ -83,8 +83,9 @@ jQuery(document).ready(function($){
                                 var percentCoord = (event.pageY - parentOffset.top) / $(this).height();
                                 var startTime = percentToTime(percentCoord);
                                 var endTime = percentToEndTime(percentCoord);
+                                var dayDate = $(this).attr('date-info');
 
-                                var $element = $("<li class='single-event' data-start='"+startTime+"' data-end='"+endTime+"' get-params='hi="+startTime+"&hf="+endTime+"' data-content='newReservation' bgcolor='rgba(0,100,100,0.7)'><a href=''><em class='event-name'>Nueva Reserva</em></a></li>");
+                                var $element = $("<li class='single-event' data-start='"+startTime+"' data-end='"+endTime+"' get-params='hi="+startTime+"&hf="+endTime+"&dt="+dayDate+"' data-content='newReservation' bgcolor='rgba(0,100,100,0.7)'><a href=''><em class='event-name'>Nueva Reserva</em></a></li>");
                                 $(this).append($element);
 		                self.singleEvents = self.eventsGroup.find('.single-event'); // Update single events to work fine with placeEvents
                                 self.placeEvents();
@@ -199,7 +200,8 @@ jQuery(document).ready(function($){
                                  data: form.serialize(),
                                  success: function(data)
                                  {
-                                     alert(data);
+                                     if(alert(data)){}
+                                     else window.location.reload();
                                  }
                                 });
                           e.preventDefault();
