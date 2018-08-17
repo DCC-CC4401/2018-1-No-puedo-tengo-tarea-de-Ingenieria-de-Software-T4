@@ -34,7 +34,8 @@ def article_data(request, article_id):
 
         context = {
             'article': article,
-            'last_loans': loan_list
+            'last_loans': loan_list,
+            'user_is_staff': request.user.is_staff
         }
 
         return render(request, 'article_data.html', context)
@@ -85,50 +86,34 @@ def article_request(request):
 
 
 @login_required
-def article_data_admin(request, article_id):
-    if not request.user.is_staff:
-        return redirect('/')
-    else:
-        try:
-            article = Article.objects.get(id=article_id)
-            context = {
-                'article': article
-            }
-            return render(request, 'article_data_admin.html', context)
-        except:
-            return redirect('/')
-
-
-
-@login_required
 def article_edit_name(request, article_id):
 
-    if request.method == "POST":
+    if request.user.is_staff and request.method == "POST":
         a = Article.objects.get(id=article_id)
         a.name = request.POST["name"]
         a.save()
-    return redirect('/article/'+str(article_id)+'/edit')
+    return redirect('/article/'+str(article_id))
 
 
 @login_required
 def article_edit_image(request, article_id):
 
-    if request.method == "POST":
+    if request.user.is_staff and request.method == "POST":
         u_file = request.FILES["image"]
         extension = os.path.splitext(u_file.name)[1]
         a = Article.objects.get(id=article_id)
         a.image.save(str(article_id)+"_image"+extension, u_file)
         a.save()
-    return redirect('/article/' + str(article_id) + '/edit')
+    return redirect('/article/' + str(article_id))
 
 
 @login_required
 def article_edit_description(request, article_id):
-    if request.method == "POST":
+    if request.user.is_staff and request.method == "POST":
         a = Article.objects.get(id=article_id)
         a.description = request.POST["description"]
         a.save()
-    return redirect('/article/' + str(article_id) + '/edit')
+    return redirect('/article/' + str(article_id))
 
 
 @login_required
