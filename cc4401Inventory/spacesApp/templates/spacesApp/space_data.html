@@ -24,9 +24,9 @@
                     <h3 style="display: inline-block">
                         {% if space.state == "D" %}
                             <span class="badge badge-pill badge-success"><i class="fas fa-chevron-left"></i> {{  space.get_state_display }}</span>
-                        {% elif loan.article.state == "P" %}
+                        {% elif space.state == "P" %}
                             <span class="badge badge-pill badge-primary"><i class="fas fa-chevron-left"></i> {{  space.get_state_display }}</span>
-                        {% elif loan.article.state == "R" %}
+                        {% elif space.state == "R" %}
                             <span class="badge badge-pill badge-warning"><i class="fas fa-chevron-left"></i> {{  space.get_state_display }}</span>
                         {% endif %}
                     </h3>
