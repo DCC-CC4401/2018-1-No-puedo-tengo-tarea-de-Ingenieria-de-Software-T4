@@ -14,9 +14,7 @@ def article_data(request, article_id):
     try:
         article = Article.objects.get(id=article_id)
 
-        last_loans = Loan.objects.filter(article=article,
-                                         ending_date_time__lt=datetime.now(tz=pytz.utc)
-                                         ).order_by('-ending_date_time')[:10]
+        last_loans = Loan.objects.filter(article=article).order_by('-action_date_time')[:10]
 
         loan_list = list()
         for loan in last_loans:
@@ -157,4 +155,3 @@ def article_create(request):
     else:
         form = ArticleForm()
     return render(request, 'article_form.html', {'form': form})
-
