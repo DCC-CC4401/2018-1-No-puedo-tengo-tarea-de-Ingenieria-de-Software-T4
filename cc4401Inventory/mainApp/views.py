@@ -195,9 +195,15 @@ def make_reservation(request):
         start_datetime = datetime.datetime.strptime(string_inicio, '%Y-%m-%d %H:%M')
         string_fin = r_date + " " + hora_fin
         end_datetime = datetime.datetime.strptime(string_fin, '%Y-%m-%d %H:%M')
-        reservation = Reservation(space=space, starting_date_time=start_datetime, ending_date_time=end_datetime, user=request.user)
-        reservation.save()
-        messages.success(request, 'Pedido realizado con exito')
+        
+        if not 9 <= int(start_datetime.hour) <= 18:
+          messages.warning(request, "Error: No se pueden realizar reservas de salas en ese horario")
+        elif not 9 <= int(end_datetime.hour) <= 18:
+          messages.warning(request, "Error: No se pueden realizar reservas de salas en ese horario")
+        else:
+          reservation = Reservation(space=space, starting_date_time=start_datetime, ending_date_time=end_datetime, user=request.user)
+          reservation.save()
+          messages.success(request, 'Pedido realizado con éxito')
       else:
-        messages.warning(request, 'Usuario no habilitado para pedir prestamos')
+        messages.warning(request, 'Error: Usuario no habilitado para pedir prestamos')
       return HttpResponse("Reserva realizada con exito!")

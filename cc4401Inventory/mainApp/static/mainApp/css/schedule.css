@@ -66,6 +66,7 @@ Main Components
 
     .cd-schedule .line-container{
         position: absolute;
+        z-index: 2;
     }
     .cd-schedule .clock{
         display:inline;

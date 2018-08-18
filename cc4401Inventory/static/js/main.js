@@ -184,7 +184,7 @@ jQuery(document).ready(function($){
 		this.modalHeader.find('.event-name').text(event.find('.event-name').text());
 		this.modalHeader.find('.event-date').text(event.find('.event-date').text());
 		this.modal.attr('data-event', event.parent().attr('data-event'));
-
+          
 		//update event content
 		this.modalBody.find('.event-info').load(event.parent().attr('data-content')+'?'+event.parent().attr('get-params')+' .event-info > *', function(data){
 			//once the event content has been loaded
@@ -200,8 +200,7 @@ jQuery(document).ready(function($){
                                  data: form.serialize(),
                                  success: function(data)
                                  {
-                                     if(alert(data)){}
-                                     else window.location.reload();
+                                     window.location.reload();
                                  }
                                 });
                           e.preventDefault();
@@ -283,6 +282,7 @@ jQuery(document).ready(function($){
 	};
 
 	SchedulePlan.prototype.closeModal = function(event) {
+                event.hide();
 		var self = this;
 		var mq = self.mq();
 

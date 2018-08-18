@@ -45,7 +45,7 @@
             <td>{{ article.name }}</td>
             <td>{{ article.get_state_display }}</td>
             <td class="center-column">
-              <a class="table-button" href="{% url 'article_data_admin' article.id %}"><i class="fas fa-edit"></i></a>
+              <a class="table-button" href="{% url 'article_data' article.id %}"><i class="fas fa-edit"></i></a>
               <a class="table-button" href="{% url 'article_delete' article.id %}"><i class="fas fa-trash"></i></a>
             </td>
           </tr>
@@ -71,7 +71,7 @@
             <td>{{ space.name }}</td>
             <td>{{ space.get_state_display }}</td>
             <td class="center-column">
-              <a class="table-button" href="#"><i class="fas fa-edit"></i></a>
+              <a class="table-button" href="{% url 'space_data' space.id %}"><i class="fas fa-edit"></i></a>
               <a class="table-button" href="{% url 'space_delete' space.id %}"><i class="fas fa-trash"></i></a>
             </td>
           </tr>
