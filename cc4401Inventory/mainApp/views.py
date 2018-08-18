@@ -200,6 +200,8 @@ def make_reservation(request):
           messages.warning(request, "Error: No se pueden realizar reservas de salas en ese horario")
         elif not 9 <= int(end_datetime.hour) <= 18:
           messages.warning(request, "Error: No se pueden realizar reservas de salas en ese horario")
+        elif ((start_datetime - datetime.datetime.now()).seconds / 3600) < 1:
+          messages.warning(request, "Error: El quincho debe pedirse con por lo menos un hora de anticipacion")
         else:
           reservation = Reservation(space=space, starting_date_time=start_datetime, ending_date_time=end_datetime, user=request.user)
           reservation.save()
