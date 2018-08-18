@@ -10,5 +10,7 @@ urlpatterns = [
     path('spaces/makeReservation', views.make_reservation, name='do_reservar'),
     path('filtro/makeReservation', views.make_reservation, name='do_reservar'),
     path('search/', views.search, name='search'),
-    path('filtro/', views.filtro_spaces, name= 'filtro_spaces'),
+    path('filtro/', views.filtro_spaces, name='filtro_spaces'),
+    path('spaces/',views.get_date, name='get_date'),
+
 ]

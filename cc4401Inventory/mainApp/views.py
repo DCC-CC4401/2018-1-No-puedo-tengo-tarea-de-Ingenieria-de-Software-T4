@@ -17,7 +17,6 @@ def landing_articles(request):
     return landing_search(request, articles)
 
 
-@login_required
 def landing_spaces(request, date=None, espacios_filtrados=[]):
     spaces = Space.objects.all().order_by(Lower('name'))
 
@@ -141,20 +140,30 @@ def search(request):
 
 
 cache_checked = []
-
+cache_date = ''
 
 # Filtra espacios segun opciones de checkbox
 def filtro_spaces(request):
-
+    get_date(request)
     global cache_checked
     if request.method == "POST":
         espacios = request.POST.getlist('checkbox')
 
         cache_checked = espacios
 
-        return landing_spaces(request, espacios_filtrados=cache_checked)
+        return landing_spaces(request, date=cache_date, espacios_filtrados=cache_checked)
     else:
-        return landing_spaces(request, espacios_filtrados=cache_checked)
+        return landing_spaces(request, date=cache_date, espacios_filtrados=cache_checked)
+
+#captura fecha desde la url
+def get_date(request):
+    global cache_date
+    if request.method == "GET":
+        date = request.GET.get('date')
+        cache_date = date
+        return cache_date
+
+
 
 def new_reservation(request):
     hini = request.GET.get('hi','')
