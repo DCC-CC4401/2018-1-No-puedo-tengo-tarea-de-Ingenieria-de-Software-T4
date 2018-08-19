@@ -83,13 +83,15 @@
             <div class="row">
                 <h1>Reservar</h1>
             </div>
-            <form action="{% url 'landing' space.id %}">
-                <div class="row">
 
-                    {% include '_schedule_landing.html' %}
-
+            <div class="row">
+                <div class="alert alert-info">
+                    <p>Estás viendo la semana del lunes <b>{{ actual_monday }}</b></p>
                 </div>
-            </form>
+                {% include '_schedule_landing.html' %}
+
+            </div>
+
         </div>
     </div>
 
