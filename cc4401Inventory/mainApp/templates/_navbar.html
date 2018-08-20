@@ -11,6 +11,12 @@
     <ul class="navbar-nav ml-auto">
       <li class="nav-item">
         <a class="nav-link" href="{% url 'user_data' user.id %}">
+
+          <div class = "nav-bar-admin">
+              {% if user.is_staff == 1 %}
+              Administrador
+              {% endif %}
+          </div>
           <div class="navbar-user-name">
             {% if user.enabled %}
               <span class="badge badge-pill badge-success">Habilitado</span>

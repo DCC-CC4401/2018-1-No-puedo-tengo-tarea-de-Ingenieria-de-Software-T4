@@ -87,7 +87,9 @@
                                                  aria-labelledby="v-pills-{{ reservation.pk }}-tab">
 
                                         <div class="d-flex w-100 justify-content-between">
+                                            <a href="{% url 'reservation_data' reservation.id %}">
                                             <h2 class="mb-1">{{ reservation.space.name }}</h2>
+                                            </a>
                                             <medium><strong>{{ reservation.starting_date_time }}</strong></medium>
                                         </div>
                                         <medium class="text-muted">{{ reservation.get_state_display }}</medium>
@@ -189,7 +191,9 @@
                                                          aria-labelledby="v-pills-{{ loan.pk }}-tab">
 
                                                         <div class="d-flex w-100 justify-content-between">
+                                                            <a href="{% url 'loan_data' loan.id %}">
                                                             <h2 class="mb-1">{{ loan.article.name }}</h2>
+                                                            </a>
                                                             <medium><strong>{{ loan.starting_date_time }}</strong>
                                                             </medium>
                                                         </div>
