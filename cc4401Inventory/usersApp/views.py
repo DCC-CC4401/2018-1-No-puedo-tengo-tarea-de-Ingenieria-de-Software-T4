@@ -60,7 +60,7 @@ def signup_submit(request):
             messages.warning(request, 'Ya existe una cuenta con ese rut')
             return redirect('/user/signup/')
         else:
-            user = User.objects.create_user(first_name=first_name, email=email, password=password, rut = rut)
+            user = User.objects.create_user(first_name=first_name, last_name=last_name, email=email, password=password, rut = rut)
             login(request, user)
             messages.success(request, 'Bienvenid@, ' + user.first_name + ' ya puedes comenzar a hacer reservas :)')
             return redirect('/articles/')
