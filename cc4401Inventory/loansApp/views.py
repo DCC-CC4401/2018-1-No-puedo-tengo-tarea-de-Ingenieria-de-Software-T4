@@ -11,11 +11,9 @@ def loan_data(request, loan_id):
 
     try:
         loan = Loan.objects.get(id=loan_id)
-        pretty_starting_datetime = loan.starting_date_time.strftime("%A, %d/%m/%y a las %H:%M")
-        pretty_ending_datetime = loan.starting_date_time.strftime("%A, %d/%m/%y a las %H:%M")
         context = {'loan':loan,
-                   'pretty_starting_dt': pretty_starting_datetime,
-                   'pretty_ending_dt': pretty_ending_datetime,
+                   'pretty_starting_dt': loan.starting_date_time,
+                   'pretty_ending_dt': loan.ending_date_time,
                    'is_requesting_user': loan.user.id == logged_user_id
                    }
         return render(request, 'loansApp/loan_data.html', context)
