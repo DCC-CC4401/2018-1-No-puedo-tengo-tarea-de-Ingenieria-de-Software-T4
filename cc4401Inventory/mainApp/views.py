@@ -12,13 +12,9 @@ from django.contrib import messages
 
 @login_required
 def landing_articles(request):
-
-    if request.user.is_staff:
-        return redirect('/admin')
-    else:
-        articles = Article.objects.all()
-        context = {'productos' : articles}
-        return landing_search(request, articles)
+    articles = Article.objects.all()
+    context = {'productos' : articles}
+    return landing_search(request, articles)
 
 
 def landing_spaces(request, date=None, espacios_filtrados=[]):
@@ -204,7 +200,7 @@ def make_reservation(request):
           messages.warning(request, "Error: No se pueden realizar reservas de salas en ese horario")
         elif not 9 <= int(end_datetime.hour) <= 18:
           messages.warning(request, "Error: No se pueden realizar reservas de salas en ese horario")
-        elif ((start_datetime - datetime.datetime.now()).seconds / 3600) < 1:
+        elif ((start_datetime - datetime.datetime.now()).seconds / 3600) < 1 and (start_datetime - datetime.datetime.now()).days == 1:
           messages.warning(request, "Error: El quincho debe pedirse con por lo menos un hora de anticipacion")
         else:
           reservation = Reservation(space=space, starting_date_time=start_datetime, ending_date_time=end_datetime, user=request.user)
