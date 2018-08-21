@@ -113,9 +113,9 @@ def modify_reservations(request):
         reservations = Reservation.objects.filter(id__in=request.POST.getlist("selected"))
         if accept:
             for reservation in reservations:
-                space = Space.objects.get(id=reservation.space.id)
-                space.state = 'P'
-                space.save()
+                #space = Space.objects.get(id=reservation.space.id)
+                #space.state = 'P'
+                #space.save()
                 reservation.reservation_state = 'V'
                 reservation.save()
         else:
@@ -152,9 +152,9 @@ def modify_loans(request):
                 loan.save()
         elif accept == "2":
             for loan in loans:
-                article = Article.objects.get(id=loan.article.id)
-                article.state = 'P'
-                article.save()
+                #article = Article.objects.get(id=loan.article.id)
+                #article.state = 'P'
+                #article.save()
                 loan.loan_state = 'V'
                 loan.save()
     return redirect('/admin/actions-panel')
@@ -172,4 +172,3 @@ def items_panel(request):
         'spaces': spaces
     }
     return render(request, 'items_panel.html', context)
-
