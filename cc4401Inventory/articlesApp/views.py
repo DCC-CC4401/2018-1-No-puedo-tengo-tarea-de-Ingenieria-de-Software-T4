@@ -21,8 +21,8 @@ def article_data(request, article_id):
 
             starting_day = loan.starting_date_time.strftime("%d-%m-%Y")
             ending_day = loan.ending_date_time.strftime("%d-%m-%Y")
-            starting_hour = loan.starting_date_time.strftime("%H:%M")
-            ending_hour = loan.ending_date_time.strftime("%H:%M")
+            starting_hour = (loan.starting_date_time - timedelta(hours=3)).strftime("%H:%M")
+            ending_hour = (loan.ending_date_time - timedelta(hours=3)).strftime("%H:%M")
 
             if starting_day == ending_day:
                 loan_list.append(starting_day+" "+starting_hour+" a "+ending_hour)
