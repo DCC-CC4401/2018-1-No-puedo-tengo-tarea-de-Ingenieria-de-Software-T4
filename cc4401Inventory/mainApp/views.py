@@ -19,6 +19,7 @@ def landing_articles(request):
 
 def landing_spaces(request, date=None, espacios_filtrados=[]):
     spaces = Space.objects.all().order_by(Lower('name'))
+    get_date(request)
 
     if date:
         current_date = date
@@ -142,6 +143,15 @@ def search(request):
 cache_checked = []
 cache_date = ''
 
+
+#captura fecha desde la url
+def get_date(request):
+    global cache_date
+    if request.method == "GET":
+        date = request.GET.get('date')
+        cache_date = date
+        return cache_date
+
 # Filtra espacios segun opciones de checkbox
 def filtro_spaces(request):
     get_date(request)
@@ -155,13 +165,6 @@ def filtro_spaces(request):
     else:
         return landing_spaces(request, date=cache_date, espacios_filtrados=cache_checked)
 
-#captura fecha desde la url
-def get_date(request):
-    global cache_date
-    if request.method == "GET":
-        date = request.GET.get('date')
-        cache_date = date
-        return cache_date
 
 
 
