@@ -1,0 +1,15 @@
+{% extends 'application_layout.html' %}
+{% load static %}
+{% block title %}
+  Crear artículo:
+{% endblock %}
+
+
+{% block body %}
+    <h1>Nuevo Artículo</h1>
+    <form action="" method="POST" class="post-form" enctype="multipart/form-data">{% csrf_token %}
+        {{ form.as_ul }}
+    <button type="submit" class="save btn btn-default"/>Guardar</button>
+    </form>
+
+{% endblock %}

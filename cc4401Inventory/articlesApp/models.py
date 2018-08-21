@@ -9,4 +9,4 @@ class Article(Item):
         ('R', 'En reparación'),
         ('L', 'Perdido')
     )
-    state = models.CharField(max_length=1, choices=STATES)
+    state = models.CharField('Estado', max_length=1, choices=STATES)

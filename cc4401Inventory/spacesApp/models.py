@@ -8,4 +8,5 @@ class Space(Item):
         ('P', 'En préstamo'),
         ('R', 'En reparación')
     )
-    state = models.CharField(max_length=1, choices=STATES)
+    state = models.CharField('Estado', max_length=1, choices=STATES)
+    capacity = models.IntegerField('Capacidad', default=0)

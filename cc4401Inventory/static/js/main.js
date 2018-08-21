@@ -18,8 +18,8 @@ jQuery(document).ready(function($){
 		this.eventsWrapper = this.element.find('.events');
 		this.eventsGroup = this.eventsWrapper.find('.events-group');
 		this.singleEvents = this.eventsGroup.find('.single-event');
+                this.daySpaces = this.eventsGroup.find('.day-space');
 		this.eventSlotHeight = this.eventsGroup.eq(0).children('.top-info').outerHeight();
-		console.log(this.eventSlotHeight)
 		this.modal = this.element.find('.event-modal');
 		this.modalHeader = this.modal.find('.header');
 		this.modalHeaderBg = this.modal.find('.header-bg');
@@ -76,6 +76,23 @@ jQuery(document).ready(function($){
 			});
 		});
 
+                this.daySpaces.each(function(){
+                        $(this).on('click', function (event) {
+                                event.preventDefault();
+                                var parentOffset = $(this).offset();
+                                var percentCoord = (event.pageY - parentOffset.top) / $(this).height();
+                                var startTime = percentToTime(percentCoord);
+                                var endTime = percentToEndTime(percentCoord);
+                                var dayDate = $(this).attr('date-info');
+
+                                var $element = $("<li class='single-event' data-start='"+startTime+"' data-end='"+endTime+"' get-params='hi="+startTime+"&hf="+endTime+"&dt="+dayDate+"' data-content='newReservation' bgcolor='rgba(0,100,100,0.7)'><a href=''><em class='event-name'>Nueva Reserva</em></a></li>");
+                                $(this).append($element);
+		                self.singleEvents = self.eventsGroup.find('.single-event'); // Update single events to work fine with placeEvents
+                                self.placeEvents();
+                                if ( !self.animating ) self.openModal($element.find("a"));
+                        });
+                }); 
+
 		/* Para dibujar la linea de horario:
 		 */
 		var now = new Date();
@@ -92,7 +109,6 @@ jQuery(document).ready(function($){
 					'4': 'Jueves',
 					'5': 'Viernes'
 		}
-		console.log(dias);
 		var time_now_top = self.eventSlotHeight*(time_now - self.timelineStart)/self.timelineUnitDuration*(20/50.0) + 50;
 
 		if(hh>= 9 && hh < 18){
@@ -168,11 +184,27 @@ jQuery(document).ready(function($){
 		this.modalHeader.find('.event-name').text(event.find('.event-name').text());
 		this.modalHeader.find('.event-date').text(event.find('.event-date').text());
 		this.modal.attr('data-event', event.parent().attr('data-event'));
-
+          
 		//update event content
-		this.modalBody.find('.event-info').load(event.parent().attr('data-content')+'.html .event-info > *', function(data){
+		this.modalBody.find('.event-info').load(event.parent().attr('data-content')+'?'+event.parent().attr('get-params')+' .event-info > *', function(data){
 			//once the event content has been loaded
 			self.element.addClass('content-loaded');
+                        $("#rForm").submit(function(e) {
+                          console.log("submiting...");
+                          var form = $(this);
+                          var url = form.attr('action');
+
+                          $.ajax({
+                                 type: "POST",
+                                 url: url,
+                                 data: form.serialize(),
+                                 success: function(data)
+                                 {
+                                     window.location.reload();
+                                 }
+                                });
+                          e.preventDefault();
+                        });
 		});
 
 		this.element.addClass('modal-is-open');
@@ -250,6 +282,7 @@ jQuery(document).ready(function($){
 	};
 
 	SchedulePlan.prototype.closeModal = function(event) {
+                event.hide();
 		var self = this;
 		var mq = self.mq();
 
@@ -433,3 +466,24 @@ jQuery(document).ready(function($){
 		});
 	}
 });
+
+function percentToTime(percent) {
+        var hora = Math.floor(percent * 9 + 9);
+        var minuto = Math.floor(((percent * 9 + 9) % 1) * 6) * 10;
+        if (minuto == 60) {
+          minuto = 0;
+        }
+        return hora.toString() + ":" + minuto.toString();
+}
+function percentToEndTime(percent) {
+        var hora = Math.floor(percent * 9 + 9) + 1;
+        if (hora > 18) {
+          hora = 18;
+        }
+        var minuto = Math.floor(((percent * 9 + 9) % 1) * 6) * 10;
+        if (minuto == 60 || hora == 18) {
+          minuto = 0;
+        }
+
+        return hora.toString() + ":" + minuto.toString();
+}

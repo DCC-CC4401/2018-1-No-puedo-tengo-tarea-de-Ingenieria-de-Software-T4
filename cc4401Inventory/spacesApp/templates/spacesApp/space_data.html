@@ -1,0 +1,205 @@
+{% extends 'application_layout.html' %}
+
+{% load static %}
+
+{% block title %}
+    Ficha de Espacio: {{ space.name }}
+{% endblock %}
+
+
+{% block body %}
+    <div class="row justify-content-center">
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1 style="display: inline-block">
+                        {{ space.name }}
+                        {% if user_is_staff %}
+                            <button type="button" class="btn btn-light btn-sm" data-toggle="modal"
+                                    data-target="#editName">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        {% endif %}
+                    </h1>
+                    <h3 style="display: inline-block">
+                        {% if space.state == "D" %}
+                            <span class="badge badge-pill badge-success"><i
+                                    class="fas fa-chevron-left"></i> {{ space.get_state_display }}</span>
+                        {% elif space.state == "P" %}
+                            <span class="badge badge-pill badge-primary"><i
+                                    class="fas fa-chevron-left"></i> {{ space.get_state_display }}</span>
+                        {% elif space.state == "R" %}
+                            <span class="badge badge-pill badge-warning"><i
+                                    class="fas fa-chevron-left"></i> {{ space.get_state_display }}</span>
+                        {% endif %}
+                    </h3>
+                </div>
+                <div class="w-100"></div>
+                <div class="col-md-12">
+                    <h4>Capacidad: {{ space.capacity }}
+                        {% if user_is_staff %}
+                            <button type="button" class="btn btn-light btn-sm" data-toggle="modal"
+                                    data-target="#editCapacity">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        {% endif %}
+                    </h4>
+                </div>
+                <div class="w-100"></div>
+                <div class="col-md-12">
+                    {% if user_is_staff %}
+                        <button type="button" class="btn btn-light btn-sm" data-toggle="modal" data-target="#editImage">
+                            <i class="fas fa-image"></i> Cambiar Imagen
+                        </button>
+                    {% endif %}
+                    {% if space.image %}
+                        <img src=" {% static space.image.url %}" class="img-fluid" alt="Foto" style="height: 400px"/>
+                    {% else %}
+                        <img class="card-img-top" src="{% static 'img/items/default_article.jpg' %}"
+                             alt="Card image cap">
+                    {% endif %}
+                </div>
+                <div class="w-100"></div>
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header article-description-title">
+                            Descripción
+                            {% if user_is_staff %}
+                                <button type="button" class="btn btn-light btn-sm" data-toggle="modal"
+                                        data-target="#editDescription">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            {% endif %}
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">{{ space.description }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-1"></div>
+        <div class="col-md-6">
+            <div class="row">
+                <h1>Reservar</h1>
+            </div>
+
+            <div class="row">
+                <div class="alert alert-info">
+                    <p>Estás viendo la semana del lunes <b>{{ actual_monday }}</b></p>
+                </div>
+                {% include '_schedule_landing.html' %}
+
+            </div>
+
+        </div>
+    </div>
+
+    {% if user_is_staff %}
+        <!--- MODALES PARA EDICION DE CAMPOS--->
+        <!--- SOLO SE GENERAN CUANDO EL USUARIO ES STAFF --->
+
+        <!-- NOMBRE -->
+        <div class="modal fade" id="editName" tabindex="-1" role="dialog" aria-labelledby="editNameLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editNameLabel">Editar Nombre del Espacio</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="{% url 'space_edit_name' space.id %}" method="post">
+                        {% csrf_token %}
+                        <div class="modal-body">
+                            <input name="name" class="form-control" type="text" placeholder="Ingrese Nombre">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- CAPACIDAD -->
+        <div class="modal fade" id="editCapacity" tabindex="-1" role="dialog" aria-labelledby="editCapacityLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editCapacityLabel">Editar Capacidad del Espacio</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="{% url 'space_edit_capacity' space.id %}" method="post">
+                        {% csrf_token %}
+                        <div class="modal-body">
+                            <input name="capacity" class="form-control" type="number" min="0" step="1"
+                                   placeholder="Ingrese Capacidad">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- IMAGEN -->
+        <div class="modal fade" id="editImage" tabindex="-1" role="dialog" aria-labelledby="editImageLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editImageLabel">Cambiar Imagen del Espacio</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="{% url 'space_edit_image' space.id %}" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="modal-body">
+                            <label for="editImageControl">Subir Imagen</label>
+                            <input type="file" class="form-control-file" id="editImageControl" name="image">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- DESCRIPCION -->
+        <div class="modal fade" id="editDescription" tabindex="-1" role="dialog" aria-labelledby="editDescriptionLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editDescripcionLabel">Editar Descripción del Espacio</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="{% url 'space_edit_description' space.id %}" method="post">
+                        {% csrf_token %}
+                        <div class="modal-body">
+                            <input name="description" class="form-control" type="text"
+                                   placeholder="Ingrese Descripción">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
