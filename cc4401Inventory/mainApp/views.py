@@ -12,13 +12,9 @@ from django.contrib import messages
 
 @login_required
 def landing_articles(request):
-
-    if request.user.is_staff:
-        return redirect('/admin')
-    else:
-        articles = Article.objects.all()
-        context = {'productos' : articles}
-        return landing_search(request, articles)
+    articles = Article.objects.all()
+    context = {'productos' : articles}
+    return landing_search(request, articles)
 
 
 def landing_spaces(request, date=None, espacios_filtrados=[]):
