@@ -39,6 +39,12 @@
                     <li class="nav-item">
                         <a class="nav-link btn-light" data-toggle="pill" href="#prestamos">Préstamos</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn-light" data-toggle="pill" href="#Rconcretados">Reservas concretadas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn-light" data-toggle="pill" href="#Pconcretados">Préstamos concretados</a>
+                    </li>
                 </ul>
             </div>
 
@@ -255,7 +261,217 @@
                             <p>No se han realizado préstamos</p>
                         {% endif %}
                     </div>
+                 <div id="Rconcretados" class="container tab-pane fade">
+                 <br>
+                      {% if Rconcretados %}
+                        <div class="row">
+
+                        <!-- Checkbox, Nombre, Estado-->
+                        <div class="col-md-3">
+                            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist"
+                                 aria-orientation="vertical">
+                            {% for rconcretado in Rconcretados %}
+
+                                            <!-- Tener seleccionado la primera casilla por default-->
+
+                                            <a class="nav-link {% if forloop.counter0 == 0 %} active {% endif %}
+                                         d-flex justify-content-between align-items-center"
+                                               id="v-pills-{{ rconcretado.pk }}-tab" data-toggle="pill"
+                                               href="#v-pills-{{ rconcretado.pk }}"
+                                               role="tab" aria-controls="v-pills-{{ rconcretado.pk }}" aria-selected="false">
+                                                {{rconcretado.space.name }} <span
+                                                    class="badge badge-pill badge-light">{{ rconcretado.reservation_state }}</span></a>
+                                        {% endfor %}
+
+                            </div>
+                        </div>
+
+                        <!-- Contenido de cada objeto y/o espacio del resumen de reservas-->
+                        <div class="col-md-7 offset-1">
+                            <div class="tab-content" id="v-pills-tabContent">
+                                <div class="row">
+                                {% for rconcretado in Rconcretados %}
+                                    <div class="col-md-6">
+                                    <div class="card mt-4">
+                                        <div class="card-body">
+                                            <div class="tab-pane fade show active" id="v-pills-{{ rconcretado.pk }}"
+                                                 role="tabpanel"
+                                                 aria-labelledby="v-pills-{{ rconcretado.pk }}-tab">
+
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <a href="{% url 'reservation_data' rconcretado.id %}">
+                                            <h2 class="mb-1">{{ rconcretado.space.name }}</h2>
+                                            </a>
+                                            <medium><strong>{{ rconcretado.starting_date_time }}</strong></medium>
+                                        </div>
+                                        <medium class="text-muted">{{ rconcretado.get_reservation_state_display }}</medium>
+
+                                        <!-- Imagen de las reservas-->
+                                        {% if rconcretado.space.image %}
+                                            <img src=" {% static rconcretado.space.image.url %}" class="img-fluid"
+
+                                                 alt="Foto"/>
+                                        {% else %}
+                                            <img class="card-img-top img-fluid"
+                                                 src="{% static 'img/items/default_article.jpg' %}"
+                                                 alt="Card image cap">
+                                        {% endif %}
+
+
+                                        <p>{{ rconcretado.space.description }}</p>
+
+                                        <div class="reservation-timeline">
+                                            <div class="container_timeline right">
+                                                <div class="content">
+                                                    <p><strong>{{ rconcretado.starting_date_time }}</strong> Solicitud
+                                                        en proceso
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            <div class="container_timeline right">
+                                                <div class="content">
+                                                    <p><strong>{{ rconcretado.starting_date_time }}</strong> Solicitud
+                                                        en Enviado
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            <div class="container_timeline right">
+                                                <div class="content">
+                                                    <p><strong>{{ rconcretado.starting_date_time }}</strong> Solicitud
+                                                        enviada</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        </div>
+
+                                        </div>
+                                    </div>
+                                  </div>
+                                {% endfor %}
+                                </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    {% else %}
+                        <p>No existen reservas concretadas</p>
+                    {% endif %}
+
+                 </div>
+
+            <!-- Contenido de préstamos concretados-->
+                    <div id="Pconcretados" class="container tab-pane fade"><br>
+                        {% if Pconcretados %}
+
+                            <div class="row">
+
+                                <!-- Nombre, Estado-->
+                                <div class="col-lg-3">
+                                    <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist"
+                                         aria-orientation="vertical">
+
+                                        {% for pconcretado in Pconcretados %}
+
+                                            <!-- Tener seleccionado la primera casilla por default-->
+
+                                            <a class="nav-link {% if forloop.counter0 == 0 %} active {% endif %}
+                                         d-flex justify-content-between align-items-center"
+                                               id="v-pills-{{ pconcretado.pk }}-tab" data-toggle="pill"
+                                               href="#v-pills-{{ pconcretado.pk }}"
+                                               role="tab" aria-controls="v-pills-{{ pconcretado.pk }}" aria-selected="false">
+                                                {{ pconcretado.article.name }} <span
+                                                    class="badge badge-pill badge-light">{{ pconcretado.loan_state }}</span></a>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+
+                                <!-- Contenido de cada objeto y/o espacio del resumen de reservas-->
+                                <div class="col-lg-9">
+                                    <div class="card mt-4">
+                                        <div class="card-body">
+                                            <div class="tab-content" id="v-pills-tabContent">
+
+                                                {% for pconcretado in Pconcretados %}
+
+                                                    <div class="tab-pane fade show {% if forloop.counter0 == 0 %}
+                                                    active {% endif %}"
+                                                         id="v-pills-{{ pconcretado.pk }}"
+                                                         role="tabpanel"
+                                                         aria-labelledby="v-pills-{{ pconcretado.pk }}-tab">
+
+                                                        <div class="d-flex w-100 justify-content-between">
+                                                            <a href="{% url 'loan_data' pconcretado.id %}">
+                                                            <h2 class="mb-1">{{ pconcretado.article.name }}</h2>
+                                                            </a>
+                                                            <medium><strong>{{ pconcretado.starting_date_time }}</strong>
+                                                            </medium>
+                                                        </div>
+                                                        <medium class="text-muted">{{ pconcretado.get_loan_state_display }}</medium>
+
+                                                        <!-- Imagen de los préstamos-->
+                                                        {% if pconcretado.article.image %}
+                                                            <img src=" {% static pconcretado.article.image.url %}"
+                                                                 class="img-fluid"
+                                                                 alt="Foto"
+                                                                 style="height: 900px"/>
+                                                        {% else %}
+                                                            <img class="card-img-top img-fluid"
+                                                                 src="{% static 'img/items/default_article.jpg' %}"
+                                                                 alt="Card image cap">
+                                                        {% endif %}
+
+                                                        <p>{{ pconcretado.article.description }}</p>
+
+                                                        <div class="reservation-timeline">
+                                                            <div class="container_timeline right">
+                                                                <div class="content">
+                                                                    <p><strong>{{ pconcretado.starting_date_time }}</strong>
+                                                                        Solicitud en
+                                                                        proceso
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="container_timeline right">
+                                                                <div class="content">
+                                                                    <p><strong>{{ pconcretado.starting_date_time }}</strong>
+                                                                        Solicitud en
+                                                                        Enviado
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="container_timeline right">
+                                                                <div class="content">
+                                                                    <p><strong>{{ pconcretado.starting_date_time }}</strong>
+                                                                        Solicitud
+                                                                        enviada</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                {% endfor %}
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        {% else %}
+                            <p>No se han realizado préstamos concretados</p>
+                        {% endif %}
+                    </div>
+
                 </div>
+
+
             </div>
 
         </div>
