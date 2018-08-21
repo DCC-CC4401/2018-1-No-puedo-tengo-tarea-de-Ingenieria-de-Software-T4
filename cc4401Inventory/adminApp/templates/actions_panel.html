@@ -10,6 +10,9 @@
             {% include '_sidebar.html' %}
             <div class="col-md-10">
                 <div class="row">
+                    <div class="alert alert-info">
+                        <p>Estás viendo la semana del lunes <b>{{ actual_monday }}</b></p>
+                    </div>
                     {% include '_schedule_landing.html' %}
                 </div>
                 <div class="row">
@@ -18,11 +21,19 @@
                         <div class="row">
                             <form action="" method="get">
                                 <input type="hidden" name="date" value="{{ current_date }}">
-                                <div class="btn-group" role="group" aria-label="Basic example" style="margin: 10px auto;">
-                                    <button name = "filter" value="todos" type="submit" class="btn btn-secondary">Todos</button>
-                                    <button name = "filter" value="vigentes" type="submit" class="btn btn-secondary">Vigentes</button>
-                                    <button name = "filter" value="pendientes" type="submit" class="btn btn-secondary">Pendientes</button>
-                                    <button name = "filter" value="rechazados" type="submit" class="btn btn-secondary">Rechazados</button>
+                                <div class="btn-group" role="group" aria-label="Basic example"
+                                     style="margin: 10px auto;">
+                                    <button name="filter" value="todos" type="submit" class="btn btn-secondary">Todos
+                                    </button>
+                                    <button name="filter" value="vigentes" type="submit" class="btn btn-secondary">
+                                        Vigentes
+                                    </button>
+                                    <button name="filter" value="pendientes" type="submit" class="btn btn-secondary">
+                                        Pendientes
+                                    </button>
+                                    <button name="filter" value="rechazados" type="submit" class="btn btn-secondary">
+                                        Rechazados
+                                    </button>
                                 </div>
                             </form>
                         </div>
@@ -64,12 +75,22 @@
                         <div class="row">
                             <form action="" method="get">
                                 <input type="hidden" name="date" value="{{ current_date }}">
-                                <div class="btn-group" role="group" aria-label="Basic example" style="margin: 10px auto;">
-                                    <button name = "filter" value="todos" type="submit" class="btn btn-secondary">Todos</button>
-                                    <button name = "filter" value="vigentes" type="submit" class="btn btn-secondary">Vigentes</button>
-                                    <button name = "filter" value="caducados" type="submit" class="btn btn-secondary">Caducados</button>
-                                    <button name = "filter" value="recibidos" type="submit" class="btn btn-secondary">Recibidos</button>
-                                    <button name = "filter" value="perdidos" type="submit" class="btn btn-secondary">Perdidos</button>
+                                <div class="btn-group" role="group" aria-label="Basic example"
+                                     style="margin: 10px auto;">
+                                    <button name="filter" value="todos" type="submit" class="btn btn-secondary">Todos
+                                    </button>
+                                    <button name="filter" value="vigentes" type="submit" class="btn btn-secondary">
+                                        Vigentes
+                                    </button>
+                                    <button name="filter" value="caducados" type="submit" class="btn btn-secondary">
+                                        Caducados
+                                    </button>
+                                    <button name="filter" value="recibidos" type="submit" class="btn btn-secondary">
+                                        Recibidos
+                                    </button>
+                                    <button name="filter" value="perdidos" type="submit" class="btn btn-secondary">
+                                        Perdidos
+                                    </button>
                                 </div>
                             </form>
                         </div>
