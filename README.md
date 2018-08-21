@@ -1,5 +1,5 @@
 # Tarea 4: No puedo tengo tarea de ing. de software 2018-1 CC4401 Ingeniería de Software
-Proyecto Git para la _Tarea 4_ del grupo 5 **__No puedo tengo tarea de ing. de software**.
+Proyecto Git para la _Tarea 4_ del grupo 5 **__No puedo tengo tarea de ing. de software__**.
 
 Instrucciones para ejecutar el proyecto:
 
