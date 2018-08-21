@@ -10,7 +10,7 @@ def delete(request):
         reservation_ids = request.POST.getlist('reservation')
         try:
             for reservation_id in reservation_ids:
-                reservation = Reservation.objects.get(id=reservation_id)
+                reservation = Reservation.objects.get(pk=reservation_id)
                 if reservation.state == 'P':
                     reservation.delete()
         except:
