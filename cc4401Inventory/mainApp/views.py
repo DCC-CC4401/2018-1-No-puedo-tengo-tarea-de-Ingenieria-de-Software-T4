@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.utils.timezone import localtime
 from django.db.models.functions import Lower
 import datetime
@@ -12,9 +12,13 @@ from django.contrib import messages
 
 @login_required
 def landing_articles(request):
-    articles = Article.objects.all()
-    context = {'productos' : articles}
-    return landing_search(request, articles)
+
+    if request.user.is_staff:
+        return redirect('/admin')
+    else:
+        articles = Article.objects.all()
+        context = {'productos' : articles}
+        return landing_search(request, articles)
 
 
 def landing_spaces(request, date=None, espacios_filtrados=[]):

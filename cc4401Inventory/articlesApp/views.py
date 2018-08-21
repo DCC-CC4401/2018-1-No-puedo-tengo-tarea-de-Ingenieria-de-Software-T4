@@ -44,7 +44,7 @@ def article_data(request, article_id):
 def verificar_horario_habil(horario):
     if horario.isocalendar()[2] > 5:
         return False
-    if horario.hour < 9 or horario.hour > 18:
+    if horario.hour < 9 or horario.hour > 18 or (horario.hour == 18 and horario.minute > 0):
         return False
 
     return True
@@ -68,8 +68,8 @@ def article_request(request):
                     messages.warning(request, 'Los pedidos deben ser hechos al menos con una hora de anticipación.')
                 elif start_date_time.date() != end_date_time.date():
                     messages.warning(request, 'Los pedidos deben ser devueltos el mismo día que se entregan.')
-                elif not verificar_horario_habil(start_date_time) and not verificar_horario_habil(end_date_time):
-                    messages.warning(request, 'Los pedidos deben ser hechos en horario hábil.')
+                elif not verificar_horario_habil(start_date_time) or not verificar_horario_habil(end_date_time):
+                    messages.warning(request, 'Los pedidos deben ser hechos en horario hábil de Lunes a Viernes entre 9:00 y 18:00.')
                 else:
                     loan = Loan(article=article, starting_date_time=start_date_time, ending_date_time=end_date_time,
                                 user=request.user)
@@ -78,7 +78,7 @@ def article_request(request):
             except Exception as e:
                 messages.warning(request, 'Ingrese una fecha y hora válida.')
         else:
-            messages.warning(request, 'Usuario no habilitado para pedir préstamos')
+            messages.warning(request, 'Usuario no habilitado para realizar préstamos')
 
         return redirect('/article/' + str(article.id))
 
